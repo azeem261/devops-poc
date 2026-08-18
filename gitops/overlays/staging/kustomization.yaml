@@ -1,0 +1,39 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: taskflow-staging
+
+resources:
+- ../../base
+
+patches:
+  - target:
+      kind: Service
+      name: frontend
+    patch: |-
+      - op: replace
+        path: /spec/type
+        value: ClusterIP
+      - op: remove
+        path: /spec/ports/0/nodePort
+  - target:
+      kind: Deployment
+      name: frontend
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 2
+
+# CI rewrites newName/newTag on every build (kustomize edit set image).
+# CHANGE_ME = your GitHub username (lowercase). The first CI run will
+# overwrite these values automatically.
+images:
+- name: devops-poc-api
+  newName: ghcr.io/azeem261/devops-poc-api
+  newTag: 1e4b4b1cbbf65dfcfe330fa0067ef89779625eb7
+- name: devops-poc-frontend
+  newName: ghcr.io/azeem261/devops-poc-frontend
+  newTag: 1e4b4b1cbbf65dfcfe330fa0067ef89779625eb7
+- name: devops-poc-worker
+  newName: ghcr.io/azeem261/devops-poc-worker
+  newTag: 1e4b4b1cbbf65dfcfe330fa0067ef89779625eb7

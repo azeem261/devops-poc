@@ -1,0 +1,22 @@
+# The ArgoCD "Application" — this is the GitOps contract:
+# "keep <destinationNamespace> in sync with <path> of <repoURL>".
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: taskflow-staging
+  namespace: {{ .Release.Namespace }}
+spec:
+  project: default
+  source:
+    repoURL: {{ .Values.repoURL | quote }}
+    targetRevision: {{ .Values.targetRevision | quote }}
+    path: gitops/overlays/staging
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: taskflow-staging
+  syncPolicy:
+    automated:
+      prune: true      # delete cluster resources removed from git
+      selfHeal: true   # revert manual kubectl edits back to git state
+    syncOptions:
+      - CreateNamespace=true
