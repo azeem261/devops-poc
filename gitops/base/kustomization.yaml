@@ -7,3 +7,5 @@ resources:
   - worker.yaml
   - frontend.yaml
   - stats.yaml
+  - ingress.yaml
+  

@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ingress-nginx
+  namespace: {{ .Release.Namespace }}
+spec:
+  project: default
+  source:
+    repoURL: https://kubernetes.github.io/ingress-nginx   # helm repo, not git!
+    chart: ingress-nginx                                  # chart name replaces "path"
+    targetRevision: 4.15.1                                   # CHART version, not a branch
+    helm:
+      valuesObject:
+        controller:
+          service:
+            type: NodePort
+            nodePorts:
+              http: 30080
+
+
+            # your job: type + the nodePort that inherits the kind mapping
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ingress-nginx
+  syncPolicy:
+    automated:
+      prune: true      # delete cluster resources removed from git
+      selfHeal: true   # revert manual kubectl edits back to git state
+    syncOptions:
+      - CreateNamespace=true

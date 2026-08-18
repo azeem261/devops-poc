@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: taskflow
+spec:
+  # Binds this rule to the ingress-nginx controller (IngressClass "nginx").
+  # Without this line the Ingress is accepted by the API but routed by nobody.
+  ingressClassName: nginx
+  rules:
+    # localtest.me and *.localtest.me always resolve to 127.0.0.1.
+    # Staging patches this host in its overlay.
+    - host: taskflow.localtest.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80

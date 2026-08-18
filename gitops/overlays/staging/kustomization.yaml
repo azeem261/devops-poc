@@ -23,6 +23,13 @@ patches:
       - op: replace
         path: /spec/replicas
         value: 2
+  - target:
+      kind: Ingress
+      name: taskflow
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: staging.taskflow.localtest.me
 
 # CI rewrites newName/newTag on every build (kustomize edit set image).
 # CHANGE_ME = your GitHub username (lowercase). The first CI run will
