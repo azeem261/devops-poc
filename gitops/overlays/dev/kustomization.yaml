@@ -4,18 +4,18 @@ kind: Kustomization
 namespace: taskflow
 
 resources:
-  - ../../base
+- ../../base
 
 # CI rewrites newName/newTag on every build (kustomize edit set image).
 # CHANGE_ME = your GitHub username (lowercase). The first CI run will
 # overwrite these values automatically.
 images:
-  - name: devops-poc-api
-    newName: ghcr.io/CHANGE_ME/devops-poc-api
-    newTag: latest
-  - name: devops-poc-worker
-    newName: ghcr.io/CHANGE_ME/devops-poc-worker
-    newTag: latest
-  - name: devops-poc-frontend
-    newName: ghcr.io/CHANGE_ME/devops-poc-frontend
-    newTag: latest
+- name: devops-poc-api
+  newName: ghcr.io/azeem261/devops-poc-api
+  newTag: 1e4b4b1cbbf65dfcfe330fa0067ef89779625eb7
+- name: devops-poc-frontend
+  newName: ghcr.io/azeem261/devops-poc-frontend
+  newTag: 1e4b4b1cbbf65dfcfe330fa0067ef89779625eb7
+- name: devops-poc-worker
+  newName: ghcr.io/azeem261/devops-poc-worker
+  newTag: 1e4b4b1cbbf65dfcfe330fa0067ef89779625eb7
