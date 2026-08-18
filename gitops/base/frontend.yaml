@@ -38,7 +38,7 @@ spec:
   # NodePort 30080 is mapped to localhost:8080 by the kind cluster config
   # (see infra/terraform/main.tf), so the app is reachable at
   # http://localhost:8080 on the host machine.
-  type: CLusterIP
+  type: ClusterIP
   selector:
     app: frontend
   ports:
