@@ -37,13 +37,13 @@ patches:
 images:
 - name: devops-poc-api
   newName: ghcr.io/azeem261/devops-poc-api
-  newTag: 39fd00b6fbc0a8edc59bed2fd6df1af9b7b22b96
+  newTag: 95bba40e03af1b9991ba10d75f02b1db8a5c17c1
 - name: devops-poc-frontend
   newName: ghcr.io/azeem261/devops-poc-frontend
-  newTag: 39fd00b6fbc0a8edc59bed2fd6df1af9b7b22b96
+  newTag: 95bba40e03af1b9991ba10d75f02b1db8a5c17c1
 - name: devops-poc-worker
   newName: ghcr.io/azeem261/devops-poc-worker
-  newTag: 39fd00b6fbc0a8edc59bed2fd6df1af9b7b22b96
+  newTag: 95bba40e03af1b9991ba10d75f02b1db8a5c17c1
 - name: devops-poc-stats
   newName: ghcr.io/azeem261/devops-poc-stats
-  newTag: 611b852daa9dbf8c83c188c70f67d086d31184f3
+  newTag: 95bba40e03af1b9991ba10d75f02b1db8a5c17c1
