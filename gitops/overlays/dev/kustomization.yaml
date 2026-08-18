@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: taskflow
+
+resources:
+  - ../../base
+
+# CI rewrites newName/newTag on every build (kustomize edit set image).
+# CHANGE_ME = your GitHub username (lowercase). The first CI run will
+# overwrite these values automatically.
+images:
+  - name: devops-poc-api
+    newName: ghcr.io/CHANGE_ME/devops-poc-api
+    newTag: latest
+  - name: devops-poc-worker
+    newName: ghcr.io/CHANGE_ME/devops-poc-worker
+    newTag: latest
+  - name: devops-poc-frontend
+    newName: ghcr.io/CHANGE_ME/devops-poc-frontend
+    newTag: latest

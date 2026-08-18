@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    # Only app/code changes trigger builds. The update-gitops job commits to
+    # gitops/, which does NOT match these paths — so no infinite loop.
+    paths:
+      - "apps/**"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    paths:
+      - "apps/**"
+      - ".github/workflows/ci.yml"
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  test-api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        working-directory: apps/api
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Run tests
+        working-directory: apps/api
+        run: pytest -v
+
+  build-and-push:
+    needs: test-api
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        service: [api, worker, frontend]
+    steps:
+      - uses: actions/checkout@v4
+
+      # GHCR requires a lowercase owner name
+      - name: Compute image name
+        run: echo "IMAGE=${REGISTRY}/${OWNER,,}/devops-poc-${{ matrix.service }}" >> "$GITHUB_ENV"
+        env:
+          OWNER: ${{ github.repository_owner }}
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: apps/${{ matrix.service }}
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:${{ github.sha }}
+            ${{ env.IMAGE }}:latest
+
+  update-gitops:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install kustomize
+        run: |
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          sudo mv kustomize /usr/local/bin/
+
+      - name: Point manifests at the new image tags
+        working-directory: gitops/overlays/dev
+        env:
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          OWNER_LC="${OWNER,,}"
+          for svc in api worker frontend; do
+            kustomize edit set image "devops-poc-${svc}=ghcr.io/${OWNER_LC}/devops-poc-${svc}:${GITHUB_SHA}"
+          done
+
+      - name: Commit and push manifest update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add gitops/overlays/dev/kustomization.yaml
+          git diff --cached --quiet && echo "nothing to commit" && exit 0
+          git commit -m "ci: deploy ${GITHUB_SHA::7} [skip ci]"
+          git push

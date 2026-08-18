@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Node
+node_modules/
+dist/
+
+# Terraform (note: .terraform.lock.hcl IS committed on purpose)
+.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+crash.log
+
+# kind kubeconfig written by terraform
+*-config
+
+# IDE / OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
