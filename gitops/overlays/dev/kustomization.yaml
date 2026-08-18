@@ -12,13 +12,13 @@ resources:
 images:
 - name: devops-poc-api
   newName: ghcr.io/azeem261/devops-poc-api
-  newTag: c353ea653e66fdffb28076956f00d75fb4eb7c01
+  newTag: 95bba40e03af1b9991ba10d75f02b1db8a5c17c1
 - name: devops-poc-frontend
   newName: ghcr.io/azeem261/devops-poc-frontend
-  newTag: c353ea653e66fdffb28076956f00d75fb4eb7c01
+  newTag: 95bba40e03af1b9991ba10d75f02b1db8a5c17c1
 - name: devops-poc-stats
   newName: ghcr.io/azeem261/devops-poc-stats
-  newTag: c353ea653e66fdffb28076956f00d75fb4eb7c01
+  newTag: 95bba40e03af1b9991ba10d75f02b1db8a5c17c1
 - name: devops-poc-worker
   newName: ghcr.io/azeem261/devops-poc-worker
-  newTag: c353ea653e66fdffb28076956f00d75fb4eb7c01
+  newTag: 95bba40e03af1b9991ba10d75f02b1db8a5c17c1
