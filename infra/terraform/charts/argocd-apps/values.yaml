@@ -1,0 +1,5 @@
+# Set by Terraform (see argocd.tf)
+repoURL: ""
+targetRevision: main
+path: gitops/overlays/dev
+destinationNamespace: taskflow

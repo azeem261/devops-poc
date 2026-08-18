@@ -8,43 +8,34 @@ resource "helm_release" "argocd" {
 
   # Keep resource usage modest on a laptop cluster.
   values = [yamlencode({
-    dex = { enabled = false }
+    dex           = { enabled = false }
     notifications = { enabled = false }
   })]
 
   depends_on = [kind_cluster.this]
 }
 
-# The ArgoCD "Application" — this is the GitOps contract:
-# "keep <namespace taskflow> in sync with <gitops_path> of <gitops_repo_url>".
-resource "kubectl_manifest" "taskflow_app" {
-  yaml_body = yamlencode({
-    apiVersion = "argoproj.io/v1alpha1"
-    kind       = "Application"
-    metadata = {
-      name      = "taskflow"
-      namespace = "argocd"
-    }
-    spec = {
-      project = "default"
-      source = {
-        repoURL        = var.gitops_repo_url
-        targetRevision = var.gitops_revision
-        path           = var.gitops_path
-      }
-      destination = {
-        server    = "https://kubernetes.default.svc"
-        namespace = "taskflow"
-      }
-      syncPolicy = {
-        automated = {
-          prune    = true # delete cluster resources removed from git
-          selfHeal = true # revert manual kubectl edits back to git state
-        }
-        syncOptions = ["CreateNamespace=true"]
-      }
-    }
-  })
+# The taskflow Application lives in its own tiny local chart
+# (charts/argocd-apps) installed AFTER the argocd release: Helm validates
+# every object against the cluster API before installing, so an Application
+# CR can only be applied once ArgoCD's CRDs already exist in the cluster.
+resource "helm_release" "argocd_apps" {
+  name      = "argocd-apps"
+  chart     = "${path.module}/charts/argocd-apps"
+  namespace = "argocd"
+
+  set {
+    name  = "repoURL"
+    value = var.gitops_repo_url
+  }
+  set {
+    name  = "targetRevision"
+    value = var.gitops_revision
+  }
+  set {
+    name  = "path"
+    value = var.gitops_path
+  }
 
   depends_on = [helm_release.argocd]
 }
