@@ -52,7 +52,7 @@ export default function App() {
         <h3 className="subtitle">
           Create a task, watch the worker pick it up and complete it.
         </h3>
-      </header>git
+      </header>
 
       <form onSubmit={addTask} className="task-form">
         <input
