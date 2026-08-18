@@ -37,3 +37,6 @@ images:
 - name: devops-poc-worker
   newName: ghcr.io/azeem261/devops-poc-worker
   newTag: 39fd00b6fbc0a8edc59bed2fd6df1af9b7b22b96
+- name: devops-poc-stats
+  newName: ghcr.io/azeem261/devops-poc-stats
+  newTag: 38cc063e78e15b2c15ac0149c66a5a479fb9aa03

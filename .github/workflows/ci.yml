@@ -43,7 +43,7 @@ jobs:
       packages: write
     strategy:
       matrix:
-        service: [api, worker, frontend]
+        service: [api, worker, frontend, stats]
     steps:
       - uses: actions/checkout@v4
 

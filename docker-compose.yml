@@ -40,5 +40,13 @@ services:
     depends_on:
       - api
 
+  stats:
+    build: apps/stats
+    environment:
+      DATABASE_URL: postgresql+psycopg://taskflow:taskflow@postgres:5432/taskflow
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 volumes:
   pgdata:
