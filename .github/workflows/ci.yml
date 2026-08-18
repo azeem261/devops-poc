@@ -88,7 +88,7 @@ jobs:
           OWNER: ${{ github.repository_owner }}
         run: |
           OWNER_LC="${OWNER,,}"
-          for svc in api worker frontend; do
+          for svc in api worker frontend stats; do
             kustomize edit set image "devops-poc-${svc}=ghcr.io/${OWNER_LC}/devops-poc-${svc}:${GITHUB_SHA}"
           done
 
