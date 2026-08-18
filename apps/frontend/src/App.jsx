@@ -49,10 +49,10 @@ export default function App() {
     <main className="container">
       <header>
         <h1>TaskFlow</h1>
-        <h4 className="subtitle">
+        <h3 className="subtitle">
           Create a task, watch the worker pick it up and complete it.
-        </h4>
-      </header>
+        </h3>
+      </header>git
 
       <form onSubmit={addTask} className="task-form">
         <input
