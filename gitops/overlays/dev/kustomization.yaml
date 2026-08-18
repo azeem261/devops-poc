@@ -21,4 +21,4 @@ images:
   newTag: 38cc063e78e15b2c15ac0149c66a5a479fb9aa03
 - name: devops-poc-stats
   newName: ghcr.io/azeem261/devops-poc-stats
-  newTag: 38cc063e78e15b2c15ac0149c66a5a479fb9aa03
+  newTag: 611b852daa9dbf8c83c188c70f67d086d31184f3
