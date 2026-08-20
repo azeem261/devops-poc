@@ -43,7 +43,7 @@ jobs:
       packages: write
     strategy:
       matrix:
-        service: [api, worker, frontend, stats]
+        service: [api, worker, frontend, stats, loadgen]
     steps:
       - uses: actions/checkout@v4
 
@@ -88,7 +88,7 @@ jobs:
           OWNER: ${{ github.repository_owner }}
         run: |
           OWNER_LC="${OWNER,,}"
-          for svc in api worker frontend stats; do
+          for svc in api worker frontend stats loadgen; do
             kustomize edit set image "devops-poc-${svc}=ghcr.io/${OWNER_LC}/devops-poc-${svc}:${GITHUB_SHA}"
           done
 

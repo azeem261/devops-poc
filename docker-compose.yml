@@ -49,5 +49,11 @@ services:
       postgres:
         condition: service_healthy
 
+  loadgen:
+    build: apps/loadgen
+    depends_on:
+      api:
+        condition: service_healthy
+
 volumes:
   pgdata:
