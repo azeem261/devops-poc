@@ -10,7 +10,7 @@ spec:
   template:
     metadata:
       labels:
-        app: laodgen
+        app: loadgen
     spec:
       containers:
         - name: loadgen
