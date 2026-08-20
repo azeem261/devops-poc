@@ -4,11 +4,25 @@ const STATUS_LABELS = {
   pending: 'Pending',
   processing: 'Processing…',
   done: 'Done',
+  failed: 'Failed',
+}
+
+const PRIORITY_LABELS = { high: 'High', normal: 'Normal', low: 'Low' }
+
+function StatCard({ label, value, tone }) {
+  return (
+    <div className={`stat-card ${tone ? `stat-${tone}` : ''}`}>
+      <span className="stat-value">{value ?? '—'}</span>
+      <span className="stat-label">{label}</span>
+    </div>
+  )
 }
 
 export default function App() {
   const [tasks, setTasks] = useState([])
+  const [stats, setStats] = useState(null)
   const [title, setTitle] = useState('')
+  const [priority, setPriority] = useState('normal')
   const [error, setError] = useState(null)
 
   const refresh = useCallback(async () => {
@@ -19,6 +33,12 @@ export default function App() {
       setError(null)
     } catch (err) {
       setError(err.message)
+    }
+    try {
+      const res = await fetch('/api/stats')
+      setStats(res.ok ? await res.json() : null)
+    } catch {
+      setStats(null)
     }
   }, [])
 
@@ -34,7 +54,7 @@ export default function App() {
     await fetch('/api/tasks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: title.trim() }),
+      body: JSON.stringify({ title: title.trim(), priority }),
     })
     setTitle('')
     refresh()
@@ -50,9 +70,25 @@ export default function App() {
       <header>
         <h1>TaskFlow</h1>
         <h3 className="subtitle">
-          Create a task, watch the worker pick it up and complete it.
+          Create a task, watch the worker pick it up — some fail and retry.
         </h3>
       </header>
+
+      <div className="stats-row">
+        <StatCard label="Total" value={stats?.total} />
+        <StatCard label="Pending" value={stats?.pending} tone="pending" />
+        <StatCard label="Processing" value={stats?.processing} tone="processing" />
+        <StatCard label="Done" value={stats?.done} tone="done" />
+        <StatCard label="Failed" value={stats?.failed} tone="failed" />
+        <StatCard
+          label="Avg completion"
+          value={
+            stats?.avg_completion_seconds != null
+              ? `${stats.avg_completion_seconds}s`
+              : null
+          }
+        />
+      </div>
 
       <form onSubmit={addTask} className="task-form">
         <input
@@ -61,6 +97,11 @@ export default function App() {
           placeholder="What needs doing?"
           maxLength={200}
         />
+        <select value={priority} onChange={(e) => setPriority(e.target.value)}>
+          <option value="high">High</option>
+          <option value="normal">Normal</option>
+          <option value="low">Low</option>
+        </select>
         <button type="submit">Add task</button>
       </form>
 
@@ -69,7 +110,15 @@ export default function App() {
       <ul className="task-list">
         {tasks.map((t) => (
           <li key={t.id} className={`task task-${t.status}`}>
-            <span className="task-title">{t.title}</span>
+            <span className={`prio prio-${t.priority}`}>
+              {PRIORITY_LABELS[t.priority] ?? t.priority}
+            </span>
+            <span className="task-title" title={t.error ?? undefined}>
+              {t.title}
+              {t.attempts > 1 && (
+                <span className="attempts"> · attempt {t.attempts}</span>
+              )}
+            </span>
             <span className={`badge badge-${t.status}`}>
               {STATUS_LABELS[t.status] ?? t.status}
             </span>

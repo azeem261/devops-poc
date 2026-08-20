@@ -26,10 +26,54 @@ h1 {
   margin: 0 0 2rem;
 }
 
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 0.6rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.stat-value {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-pending .stat-value { color: #fcd34d; }
+.stat-processing .stat-value { color: #93c5fd; }
+.stat-done .stat-value { color: #86efac; }
+.stat-failed .stat-value { color: #f87171; }
+
 .task-form {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
+}
+
+.task-form select {
+  padding: 0.65rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #e2e8f0;
+  font-size: 0.95rem;
 }
 
 .task-form input {
@@ -105,6 +149,33 @@ h1 {
 .badge-done {
   background: #14532d;
   color: #86efac;
+}
+
+.badge-failed {
+  background: #7f1d1d;
+  color: #fca5a5;
+}
+
+.prio {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.prio-high { background: #7f1d1d; color: #fca5a5; }
+.prio-normal { background: #334155; color: #cbd5e1; }
+.prio-low { background: #1e293b; color: #64748b; border: 1px solid #334155; }
+
+.attempts {
+  font-size: 0.75rem;
+  color: #f59e0b;
+}
+
+.task-failed .task-title {
+  color: #fca5a5;
 }
 
 .delete {
